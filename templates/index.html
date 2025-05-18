@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resume Matcher</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 40px;
+        }
+        .container {
+            max-width: 800px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .wordcloud {
+            margin-top: 20px;
+        }
+        .badge {
+            margin: 2px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 class="mb-4 text-center">Resume Matcher with WordCloud</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="resume" class="form-label">Upload Resume (.docx)</label>
+            <input class="form-control" type="file" id="resume" name="resume" accept=".docx, .pdf" required>
+        </div>
+        <div class="mb-3">
+            <label for="job_description" class="form-label">Paste Job Description</label>
+            <textarea class="form-control" id="job_description" name="job_description" rows="5" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Match Resume</button>
+    </form>
+
+    {% if result.score %}
+    <hr class="my-4">
+    <h4>Match Score: <span class="badge bg-success">{{ result.score }}</span></h4>
+
+    <h5 class="mt-4">Matched Keywords:</h5>
+    <div>
+        {% for word in result.matched %}
+            <span class="badge bg-primary">{{ word }}</span>
+        {% endfor %}
+    </div>
+
+    <h5 class="mt-4">Missing Keywords:</h5>
+    <div>
+        {% for word in result.missing %}
+            <span class="badge bg-danger">{{ word }}</span>
+        {% endfor %}
+    </div>
+
+    {% if result.wordcloud_img %}
+    <div class="wordcloud text-center mt-4">
+        <h5>Word Cloud</h5>
+        <img src="data:image/png;base64,{{ result.wordcloud_img }}" class="img-fluid rounded shadow">
+    </div>
+    {% endif %}
+    {% endif %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
